@@ -1,0 +1,69 @@
+<!--Data: https://z3sz6i8ndco.firebaseio-demo.com/ -->
+
+<!doctype html>
+<html>
+  <head>
+    <title> Event Guest Attendance </title>
+    <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>      
+  </head>
+  <body>
+    <h1 class="center"> Event Guest Attendance </h1>
+    <div class="row">                                               <!--Makes a form where the user can input information-->
+      <div class="container">
+        <form class="col s12">
+          <div class="input-field col s12">
+            <input id="nameInput" type="text" class="validate">
+            <label for="nameInput">Name</label>
+          </div>
+          <div class="input-field col s12">
+            <input id="organizationInput" type="text" class="validate">
+            <label for="organizationInput">Organization</label>
+          </div>
+          <div class="input-field col s12">
+            <input id="contactInput" type="text" class="validate">
+            <label for="contactInput">Contact Number</label>
+          </div>
+          <div class="col s12 center">
+            <button class="btn waves-effect waves-light" id="button" name="action">Submit</button>
+          </div>
+        </form>
+
+        <div class="row">                                         <!--Table to see all the guests-->
+          <table class="centered bordered highlight"> 
+            <thead>
+              <tr>
+                <th data-field="name" colspan="3">Name</th>
+                <th data-field="organization" colspan="3">Organization</th>
+                <th data-field="contactNumber" colspan"3">Contact Number</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      var myDataRef = new Firebase('https://z3sz6i8ndco.firebaseio-demo.com/');
+        $('#button').on('click', function () {                      //goes here if the user clicks the submit button
+          var name = $('#nameInput').val();
+          var organization = $('#organizationInput').val();
+          var contact = $('#contactInput').val();
+          myDataRef.push({name: name, organization: organization, contact: contact});   //pushes the data to the firebase database
+      });
+      
+      myDataRef.on('child_added', function(snapshot) {
+        var guest = snapshot.val();
+        displayEventGuestAttendance(guest.name, guest.organization, guest.contact);
+      });
+      
+      function displayEventGuestAttendance(name, organization, contact) {               //appends the information to the table
+        $('table').append("<tr><td colspan=3>" + name + "</td><td colspan=3>" + organization + "</td><td colspan=3>" + contact + "</td></tr>");
+      };
+    </script>
+  </body>
+</html>
